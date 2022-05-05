@@ -12,7 +12,6 @@ These notes were taken by following along [this](https://leveluptutorials.com/tu
 * [Writing integration tests](https://github.com/benjaminpeto/NOTES-react-testing#writing-integration-tests)
 * [Mock functions and why](https://github.com/benjaminpeto/NOTES-react-testing#mock-functions-and-why)
 * [Mocking modules](https://github.com/benjaminpeto/NOTES-react-testing#mocking-modules)
-* [Introduction to react testing](https://github.com/benjaminpeto/NOTES-react-testing#introduction-to-react-testing)
 * [React testing library and debug](https://github.com/benjaminpeto/NOTES-react-testing#react-testing-library-and-debug)
 * [Testing with test IDs](https://github.com/benjaminpeto/NOTES-react-testing#testing-with-test-ids)
 * [Events in react testing library](https://github.com/benjaminpeto/NOTES-react-testing#events-in-react-testing-library)
@@ -199,7 +198,6 @@ We imported the depencency, then we used ```jest.mock``` to mock the location of
 *It's a perfect use case if you want to test your code with third-party API, in that case you don't want to test the actual API, so you can mock that, and just test your own code.*
 
 
-  ## Introduction to react testing
 
   ## React testing library and debug
 
