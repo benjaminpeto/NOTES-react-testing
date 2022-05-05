@@ -150,6 +150,55 @@ test('add', () => {
 
   ## Mocking modules
 
+> add.js
+```javascript
+export const add = (x, y) => x + y;
+```
+
+> add.test.js - Unit test, tests only one thing
+```javascript
+import { add } from './add';
+
+test('add', () => {
+  expect(add(1, 2)).toBe(3);
+  expect(add(5, 2)).toBe(7);
+});
+```
+
+> App.js
+```javascript
+import { add } from './add';
+
+export const total = (shipping, subTotal) => {
+  return "€" + add(shipping + subTotal);
+};
+```
+
+> App.test.js - Integration test, tests things working together
+```javascript
+import { total } from './App';
+import { add } from './add';
+
+jest.mock('./add', () => ({
+  add: jest.fn(() => 50)
+}));
+
+test('add', () => {
+  expect(add(10, 40)).toBe('€50');
+  expect(add).toHaveBeenCalledTimes(1);
+
+  // Redundant
+  add.mockImplementation(() => 25);
+  expect(add(5, 20)).toBe('€25');
+  expect(add).toHaveBeenCalledTimes(2);
+});
+```
+
+We imported the depencency, then we used ```jest.mock``` to mock the location of the dependency and we used an arrow function to return an object, which has the fake function *of add* inside.
+
+*It's a perfect use case if you want to test your code with third-party API, in that case you don't want to test the actual API, so you can mock that, and just test your own code.*
+
+
   ## Introduction to react testing
 
   ## React testing library and debug
