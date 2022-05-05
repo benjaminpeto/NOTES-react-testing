@@ -1,8 +1,8 @@
-# NOTES: Testing in React for beginners
+# NOTES: Testing in React for beginners with Jest
 
 These notes were taken by following along [this](https://leveluptutorials.com/tutorials/react-testing-for-beginners/react-testing-for-beginners) tutorial from LevelUpTutorial.
 
-[Official Documentation](https://jestjs.io/docs/getting-started)
+[Jest - Official Documentation](https://jestjs.io/docs/getting-started)
 
 ## Table of contents
 
@@ -39,8 +39,8 @@ Boilerplate code for a basic JS test.
 
 > App.test.js
 ```javascript
-test.('name of the test', () => {
-  expect.(true).toBeTruthy();
+test('name of the test', () => {
+  expect(true).toBeTruthy();
 })
 ```
   
@@ -57,14 +57,35 @@ Jest is a test runner library for JavaScript. It works with multiple libraries a
 * Has great documentation and has entire toolkit in one place
 * Runs previously failed tests first
 * Jest can collect code coverage information from entire projects, including untested files
-* No import needed to run tests
 * Great CLI
 
-[Methods/Assertions](https://jestjs.io/docs/api)
+[Jest - Methods/Assertions](https://jestjs.io/docs/api)
 
 
 
   ## Writing Unit Tests With Jest
+
+Let's see an example for a function which sum up two numbers.
+
+> App.js
+```javascript
+export const add = (x, y) => {
+  return x + y;
+}
+```
+
+> App.test.js
+```javascript
+import { add } from './App';
+
+test('add', () => {
+  const value = add(1, 2);
+  expect(value).toBe(3);
+})
+// Output: Test passed :white_check_mark:
+```
+
+
 
   ## Writing integration tests
 
