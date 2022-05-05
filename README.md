@@ -54,7 +54,7 @@ Jest is a test runner library for JavaScript. It works with multiple libraries a
 
 * Zero config on most JS projects
 * Tests are isolated to maximize performance
-* Has great documentation and has entire toolkit in one place
+* Has great documentation and has the entire toolkit in one place
 * Runs previously failed tests first
 * Jest can collect code coverage information from entire projects, including untested files
 * Great CLI
@@ -82,12 +82,51 @@ test('add', () => {
   const value = add(1, 2);
   expect(value).toBe(3);
 })
-// Output: Test passed :white_check_mark:
+
+// Output: Test 'add' passed
+  :white_check_mark:
 ```
+
+*Unit testing ensures that all code meets quality standards before it's deployed. This ensures a reliable engineering environment where quality is paramount.*
+
 
 
 
   ## Writing integration tests
+
+  > App.js
+```javascript
+export const add = (x, y) => {
+  return x + y;
+}
+
+export const total = (shipping, subTotal) => {
+  return "€" + add(shipping + subTotal);
+}
+```
+
+> App.test.js
+```javascript
+import { add, total } from './App';
+
+test('add', () => {
+  const value = add(1, 2);
+  expect(value).toBe(3);
+})
+
+test('total', () => {
+  expect(total(5, 20)).toBe("€25");
+})
+
+// Output: Test 'add' passed
+  :white_check_mark:
+// Output: Test 'total' passed
+  :white_check_mark:
+```
+
+This is an integration test, because we're not only testing the *total function*, but also testing the *add function*, as **total relies on the add function**.
+
+Writing a Unit Test for a function which relies on another function, we need to levarage from Mock functions and create fake functions. [Read more](https://github.com/benjaminpeto/NOTES-react-testing#mock-functions-and-why)
 
   ## Mock functions and why
 
