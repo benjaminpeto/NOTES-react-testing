@@ -2,7 +2,7 @@
 
 These notes were taken by following along [this](https://leveluptutorials.com/tutorials/react-testing-for-beginners/react-testing-for-beginners) tutorial from LevelUpTutorial.
 
-
+[Official Documentation](https://jestjs.io/docs/getting-started)
 
 ## Table of contents
 
@@ -49,6 +49,20 @@ test.('name of the test', () => {
 
 
   ## Jest explained
+
+Jest is a test runner library for JavaScript. It works with multiple libraries and frameworks such as Babel, TypeScript, Node, React, Angular, Vue, etc.
+
+* Zero config on most JS projects
+* Tests are isolated to maximize performance
+* Has great documentation and has entire toolkit in one place
+* Runs previously failed tests first
+* Jest can collect code coverage information from entire projects, including untested files
+* No import needed to run tests
+* Great CLI
+
+[Methods/Assertions](https://jestjs.io/docs/api)
+
+
 
   ## Writing Unit Tests With Jest
 
