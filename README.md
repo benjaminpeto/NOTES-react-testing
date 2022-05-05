@@ -41,7 +41,7 @@ Boilerplate code for a basic JS test.
 ```javascript
 test('name of the test', () => {
   expect(true).toBeTruthy();
-})
+});
 ```
   
   *An assertion is a boolean expression. It is used to test a logical expression. An assertion is true if the logical expression that is being tested is true.*
@@ -71,7 +71,7 @@ Let's see an example for a function which sum up two numbers.
 ```javascript
 export const add = (x, y) => {
   return x + y;
-}
+};
 ```
 
 > App.test.js
@@ -81,7 +81,7 @@ import { add } from './App';
 test('add', () => {
   const value = add(1, 2);
   expect(value).toBe(3);
-})
+});
 
 // Output: Test 'add' passed
   :white_check_mark:
@@ -98,11 +98,11 @@ test('add', () => {
 ```javascript
 export const add = (x, y) => {
   return x + y;
-}
+};
 
 export const total = (shipping, subTotal) => {
   return "€" + add(shipping + subTotal);
-}
+};
 ```
 
 > App.test.js
@@ -112,11 +112,11 @@ import { add, total } from './App';
 test('add', () => {
   const value = add(1, 2);
   expect(value).toBe(3);
-})
+});
 
 test('total', () => {
   expect(total(5, 20)).toBe("€25");
-})
+});
 
 // Output: Test 'add' passed
   :white_check_mark:
@@ -129,6 +129,24 @@ This is an integration test, because we're not only testing the *total function*
 Writing a Unit Test for a function which relies on another function, we need to levarage from Mock functions and create fake functions. [Read more](https://github.com/benjaminpeto/NOTES-react-testing#mock-functions-and-why)
 
   ## Mock functions and why
+
+Without importing a function to our test, we can write a "Fake"/"Mock" function, which we can test, and allows us to make Unit test on a function which may depend on another function.
+
+This can be useful for example when we don't want to connect for a database, we can mock that up as well.
+
+> App.test.js
+```javascript
+const add = jest.fn((x, y) => 3);
+
+test('add', () => {
+  expect(add(1, 2)).toBe(3);
+  expect(add).toHaveBeenCalledTimes(1);
+  expect(add).toHaveBeenCalledWith(1, 2);
+});
+
+// Output: Test 'add' passed
+  :white_check_mark:
+```
 
   ## Mocking modules
 
