@@ -423,7 +423,67 @@ test('<NewMovie />', () => {
 ```
 
 
+
   ## Spying and mocking functions in react
+
+We will make a spy/mock function which will allow us, to mock the functionality of our component. 
+
+*const onSubmit* will be the spy function, which we'll render with the MovieForm component and pass down our spy function as the *onSubmit* prop.
+
+> MovieForm.js
+```javascript
+import React, { Component } from 'react';
+
+export default class extends Component {
+  state = {
+    text: '',
+  };
+
+  render() {
+    const { submitForm } = this.props;
+    const { text } = this.state;
+
+    return (
+      <div>
+        <form
+          data-testid="movie-form"
+          onSubmit={() => submitForm({
+            text,
+          })
+          }
+        >
+          <input type="text" />
+          <button>Submit</button>
+        </form>
+      </div>
+    );
+  }
+}
+```
+
+> MovieForm.test.js
+```javascript
+import React from 'react';
+import { render, cleanup, fireEvent } from 'react-testing-library';
+import MovieForm from './MovieForm';
+
+afterEach(cleanup);
+
+const onSubmit = jest.fn(); // mock/spy function
+
+
+test('<MovieForm />', () => {
+  const {
+    queryByTestId, getByText,
+  } = render(
+    <MovieForm submitForm={onSubmit} />, // spy function gets passed down as a prop of onSubmit
+  );
+  expect(queryByTestId('movie-form')).toBeTruthy();
+  fireEvent.click(getByText('Submit'));
+
+  expect(onSubmit).toHaveBeenCalledTimes(1);
+});
+```
 
   ## Form events with controlled inputs
 
