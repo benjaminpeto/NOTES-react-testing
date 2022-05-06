@@ -201,6 +201,45 @@ We imported the depencency, then we used ```jest.mock``` to mock the location of
 
   ## React testing library and debug
 
+  Example for testing a React Class Component
+
+> Counter.js
+```javascript
+import React, { Component } from 'react';
+
+export default class extends Component {
+  state = {
+    count: 0,
+  }
+
+  render() {
+    const { count } = this.state;
+    return (
+      <div>
+        <button>
+          {count}
+        </button>
+      </div>
+    );
+  }
+}
+```
+
+> Counter.test.js
+```javascript
+import React from 'react';
+import { render } from 'react-testing-library';
+import Counter from './Counter';
+
+test('<Counter />', () => {
+  const wrapper = render(<Counter />);
+  wrapper.debug();
+  expect(wrapper.getByText('0').tagName).toBe('BUTTON');
+});
+```
+// Output: Test '<Counter />' passed
+
+
   ## Testing with test IDs
 
   ## Events in react testing library
