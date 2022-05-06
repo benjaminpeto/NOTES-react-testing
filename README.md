@@ -232,15 +232,40 @@ import { render } from 'react-testing-library';
 import Counter from './Counter';
 
 test('<Counter />', () => {
+  // Renders component
   const wrapper = render(<Counter />);
-  wrapper.debug();
+  // Debug function gives insight what it's actually looking at in the rendering and outputs the DOM as string
+  wrapper.debug(); 
+  // basic assertion checking if the tagName of button in fact is button
   expect(wrapper.getByText('0').tagName).toBe('BUTTON');
 });
 ```
-// Output: Test '<Counter />' passed
+// Output: Test ```javascript '<Counter />' ``` passed
+
 
 
   ## Testing with test IDs
+
+Using **getByTestId** to identify button, and destructured the component from the wrapper variable.
+
+> Counter.test.js
+```javascript
+import React from 'react';
+import { render } from 'react-testing-library';
+import Counter from './Counter';
+
+test('<Counter />', () => {
+  const { debug, getByTestId } = render(<Counter />);
+
+  debug();
+  // Asserts counter-button is a button
+  expect(getByTestId('counter-button').tagName).toBe('BUTTON');
+  // Asserts counter-button starts at 0
+  expect(getByTestId('counter-button').textContent).toBe('0');
+});
+```
+
+
 
   ## Events in react testing library
 
