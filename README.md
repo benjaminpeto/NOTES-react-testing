@@ -374,7 +374,7 @@ export default class NewMovie extends Component {
 }
 ```
 
-> MovieForm.js
+> NewMovie.test.js
 ```javascript
 import React from 'react';
 import { render, cleanup } from 'react-testing-library';
@@ -396,6 +396,32 @@ test('<NewMovie />', () => {
 
 
   ## Snapshot testing 101
+
+Snapshot tests are a very useful tool whenever you want to make sure the UI does not change unexpectedly.
+
+A typical snapshot test case renders a UI component, takes a snapshot, then compares it to a reference snapshot file stored alongside the test. The test will fail if the two snapshots do not match: either the change is unexpected, or the reference snapshot needs to be updated to the new version of the UI component.
+
+*Snapshot tests are most useful when as much of the retrieved DOM structure is used in the test case. Testing React components would be verifying the DOM structure for different purposes and preventing regression in the DOM structure between versions. Snapshot testing shouldn’t be used as a default way of testing and is only recommended in certain specific use cases.*
+
+> NewMovie.test.js
+```javascript
+import React from 'react';
+import { render, cleanup } from 'react-testing-library';
+import NewMovie from './NewMovie';
+
+afterEach(cleanup);
+
+test('<NewMovie />', () => {
+  const {
+    getByTestId, queryByTestId, container,
+  } = render(<NewMovie />);
+
+  expect(getByTestId('page-title').textContent).toBe('New Movie');
+  expect(queryByTestId('movie-form')).toBeTruthy();
+  expect(container.firstChild).toMatchSnapshot();
+});
+```
+
 
   ## Spying and mocking functions in react
 
