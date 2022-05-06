@@ -1,6 +1,6 @@
 # NOTES: Testing in React for beginners with Jest
 
-These notes were taken by following along [this](https://leveluptutorials.com/tutorials/react-testing-for-beginners/react-testing-for-beginners) tutorial from LevelUpTutorial.
+These notes were taken by following along [React testing for beginners](https://leveluptutorials.com/tutorials/react-testing-for-beginners/react-testing-for-beginners) tutorial from LevelUpTutorials by Scott Tolinski.
 
 [Jest - Official Documentation](https://jestjs.io/docs/getting-started)
 
@@ -240,7 +240,7 @@ test('<Counter />', () => {
   expect(wrapper.getByText('0').tagName).toBe('BUTTON');
 });
 ```
-// Output: Test ```javascript '<Counter />' ``` passed
+// Output: Test ``` '<Counter />' ``` passed
 
 
 
@@ -268,6 +268,69 @@ test('<Counter />', () => {
 
 
   ## Events in react testing library
+
+> Counter.js
+```javascript
+import React, { Component } from 'react';
+
+export default class extends Component {
+  state = {
+    count: 0,
+  };
+
+  count = () => {
+    this.setState(prevState => ({
+      count: prevState.count + 1,
+    }));
+  }
+
+  render() {
+    const { count } = this.state;
+    return (
+      <div>
+        <button
+          type="submit"
+          data-testid="counter-button"
+          onClick={this.count}
+        >
+          {count}
+        </button>
+      </div>
+    );
+  }
+}
+```
+
+> Counter.test.js
+```javascript
+import React from 'react';
+import { render, cleanup, fireEvent } from 'react-testing-library';
+import Counter from './Counter';
+
+afterEach(cleanup); // cleanup will unmount everything from the DOM
+
+test('<Counter />', () => {
+  const { getByTestId } = render(<Counter />);
+
+  const counterButton = getByTestId('counter-button');
+
+  // Asserts counter-button is a button
+  expect(counterButton.tagName).toBe('BUTTON');
+  // Asserts counter-button starts at 0
+  expect(counterButton.textContent).toBe('0');
+
+  fireEvent.click(counterButton); // fire a click event on the button
+  expect(counterButton.textContent).toBe('1'); // expects the content of button outputs '1'
+
+  fireEvent.click(counterButton);
+  expect(counterButton.textContent).toBe('2');
+});
+```
+// Output: Test ``` '<Counter />' ``` passed
+
+We are testing what the user sees in the DOM, we are NOT testing React's state itself. This is the best practices what Jest enforces.
+
+
 
   ## Integration testing in react and cleanup
 
