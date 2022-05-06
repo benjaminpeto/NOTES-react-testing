@@ -64,7 +64,9 @@ Jest is a test runner library for JavaScript. It works with multiple libraries a
 
   ## Writing Unit Tests With Jest
 
-Let's see an example for a function which sum up two numbers.
+Unit testing means testing individual modules of an application in isolation (without any interaction with dependencies) to confirm that the code is doing things right.
+
+*Let's see an example for a function which sum up two numbers.*
 
 > App.js
 ```javascript
@@ -328,11 +330,70 @@ test('<Counter />', () => {
 ```
 // Output: Test ``` '<Counter />' ``` passed
 
-We are testing what the user sees in the DOM, we are NOT testing React's state itself. This is the best practices what Jest enforces.
+We are testing what the user sees in the DOM, we are **NOT** testing React's state itself. This is the best practices what Jest enforces.
 
 
 
   ## Integration testing in react and cleanup
+
+Integration testing means checking if different modules are working fine when combined together as a group.
+
+> MovieForm.js
+```javascript
+import React, { Component } from 'react';
+
+export default class extends Component {
+  render() {
+    return (
+      <div>
+        <form data-testid="movie-form">
+          <input type="text" />
+          <button>Submit</button>
+        </form>
+      </div>
+    );
+  }
+}
+```
+
+> NewMovie.js
+```javascript
+import React, { Component } from 'react';
+import MovieForm from './MovieForm';
+
+export default class NewMovie extends Component {
+  render() {
+    return (
+      <div>
+        <h1 data-testid="page-title">New Movie</h1>
+        {/*integration of MovieForm*/}
+        <MovieForm />
+      </div>
+    );
+  }
+}
+```
+
+> MovieForm.js
+```javascript
+import React from 'react';
+import { render, cleanup } from 'react-testing-library';
+import NewMovie from './NewMovie';
+
+afterEach(cleanup);
+
+test('<NewMovie />', () => {
+  const { debug, getByTestId, queryByTestId } = render(<NewMovie />);
+
+  // check if the page-title is present
+  expect(getByTestId('page-title').textContent).toBe('New Movie');
+  // check if movie-form is being rendered
+  expect(queryByTestId('movie-form')).toBeTruthy();
+
+  debug();
+});
+```
+
 
   ## Snapshot testing 101
 
