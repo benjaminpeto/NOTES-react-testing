@@ -571,9 +571,9 @@ test('<MovieForm />', () => {
 
   ## Testing for errors and global mocks
 
-Rendering the ```javascript <Movie />``` component without props, we can test for errors. If we want to spy on errors, we can also mock them.
+Rendering the ```javascript <Movie /> ``` component without props, we can test for errors. If we want to spy on errors, we can also mock them.
 
-Mocking the ```javascript console.error``` and seeing if it does get fired, it's definitely a technique to use for actually count on that thing.
+Mocking the ```javascript console.error ``` and seeing if it does get fired, it's definitely a technique to use for actually count on that thing.
 
 > Movie.js
 ```javascript
@@ -626,6 +626,47 @@ test('<Movie />', () => {
 
 
   ## Negative assertions and testing with react router
+
+First we will mock our ```javascript console.error```, then we make sure we call it. Then we define some fake data and pass that data into a component where we have a fake router wrapping around it.
+
+> Movie.test.js
+```javascript
+import React from 'react';
+import { render, cleanup } from 'react-testing-library';
+import { MemoryRouter } from 'react-router-dom';
+import Movie from './Movie';
+
+afterEach(() => {
+  cleanup();
+  console.error.mockClear(); // clean up the error
+});
+
+console.error = jest.fn();
+
+test('<Movie />', () => {
+  render(<Movie />);
+  expect(console.error).toHaveBeenCalled();
+});
+
+// mocking data, instead of calling the API
+const movie = {
+  id: 'hi',
+  title: 'Terminator',
+  poster_path: 'arnold.jpg',
+};
+
+// testing react router with <MemoryRouter />
+test('<Movie /> with movie', () => {
+  render(
+    <MemoryRouter>
+      <Movie movie={movie} />
+    </MemoryRouter>,
+  );
+  expect(console.error).not.toHaveBeenCalled();
+});
+```
+
+
 
   ## What to test
 
