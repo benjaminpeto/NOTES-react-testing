@@ -989,7 +989,6 @@ test('<MoviesList />', async () => {
     getByTestId,
     queryByTestId,
     getAllByTestId,
-    debug,
   } = render(
     <MemoryRouter>
       <MoviesList />
@@ -1000,13 +999,14 @@ test('<MoviesList />', async () => {
   expect(queryByTestId('loading')).toBeFalsy(); // queryByTestId looks for the element
   expect(getByTestId('movie-link').getAttribute('href')).toBe(`/${movie.id}`);
   expect(getAllByTestId('movie-link').length).toBe(movies.results.length);
-  debug();
 });
 ```
 
 
 
   ## Refactoring with tests
+
+Organizing components and tests into their individual folders, refactoring ```<MoviesList /> ``` component to be able to load page, even when API call fails.
 
   ## Code coverage
 
