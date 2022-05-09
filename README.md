@@ -571,6 +571,60 @@ test('<MovieForm />', () => {
 
   ## Testing for errors and global mocks
 
+Rendering the ```javascript <Movie />``` component without props, we can test for errors. If we want to spy on errors, we can also mock them.
+
+Mocking the ```javascript console.error``` and seeing if it does get fired, it's definitely a technique to use for actually count on that thing.
+
+> Movie.js
+```javascript
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import Overdrive from 'react-overdrive';
+
+const POSTER_PATH = 'http://image.tmdb.org/t/p/w154';
+
+const Movie = ({ movie }) => {
+  if (!movie) return null;
+  return (
+    <Link to={`/${movie.id}`}>
+      <Overdrive id={`${movie.id}`}>
+        <Poster src={`${POSTER_PATH}${movie.poster_path}`} alt={movie.title} />
+      </Overdrive>
+    </Link>
+  );
+};
+
+export default Movie;
+
+Movie.propTypes = {
+  movie: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    poster_path: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+  }).isRequired,
+};
+```
+
+> Movie.test.js
+```javascript
+import React from 'react';
+import { render, cleanup } from 'react-testing-library';
+import Movie from './Movie';
+
+afterEach(cleanup);
+
+console.error = jest.fn();
+
+test('<Movie />', () => {
+  render(<Movie />);
+  expect(console.error).toBeCalled();
+});
+```
+
+
+
   ## Negative assertions and testing with react router
 
   ## What to test
