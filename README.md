@@ -485,7 +485,89 @@ test('<MovieForm />', () => {
 });
 ```
 
+
+
   ## Form events with controlled inputs
+
+First we create a mock function, which will spy on how many times have been clicked and with what?
+
+We don't need to test if the state has been set correctly, **we need to test that the function have been submitted with the correct data.**
+
+> MovieForm.js
+```javascript
+import React, { Component } from 'react';
+
+export default class extends Component {
+  state = {
+    text: '',
+  };
+
+  render() {
+    const { submitForm } = this.props;
+    const { text } = this.state;
+
+    return (
+      <div>
+        <form
+          data-testid="movie-form"
+          onSubmit={() => submitForm({
+            text,
+          })
+          }
+        >
+          <label htmlFor="text">
+            Text
+            <input
+              type="text"
+              id="text"
+              onChange={e => this.setState({ text: e.target.value })}
+            />
+          </label>
+          <button>Submit</button>
+        </form>
+      </div>
+    );
+  }
+}
+```
+
+> MovieForm.test.js
+```javascript
+import React from 'react';
+import { render, cleanup, fireEvent } from 'react-testing-library';
+import MovieForm from './MovieForm';
+
+afterEach(cleanup);
+
+const onSubmit = jest.fn(); // mock/spy function
+
+
+test('<MovieForm />', () => {
+  const {
+    queryByTestId, getByText, getByLabelText,
+  } = render(
+    <MovieForm submitForm={onSubmit} />,
+  );
+  expect(queryByTestId('movie-form')).toBeTruthy();
+
+  // NOTE syntax below might not work,
+  // however it's more concise and easier to write, it worked for me tho
+  // getByLabelText('Text').value = 'hi';
+  // fireEvent.change(getByLabelText('Text'));
+
+  fireEvent.change(getByLabelText('Text'), {
+    target: { value: 'hi' },
+  });
+
+  fireEvent.click(getByText('Submit'));
+  expect(onSubmit).toHaveBeenCalledTimes(1);
+  expect(onSubmit).toHaveBeenCalledWith({
+    text: 'hi',
+  });
+});
+```
+
+
 
   ## Testing for errors and global mocks
 
