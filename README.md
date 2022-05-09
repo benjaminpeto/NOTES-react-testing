@@ -892,6 +892,120 @@ test('<MovieDetail />', async () => {
 
   ## Testing loading states and more pitfalls
 
+> MoviesList.js
+```javascript
+import React, { PureComponent } from 'react';
+import styled from 'styled-components';
+import Movie from './Movie';
+
+class MoviesList extends PureComponent {
+  state = {
+    movies: [],
+  };
+
+  async componentDidMount() {
+    try {
+      const res = await fetch(
+        'https://api.themoviedb.org/3/discover/movie?api_key=hi&language=en-US&sort_by=popularity.desc&include_adult=false&include_video=false&page=1',
+      );
+      const movies = await res.json();
+      this.setState({
+        movies: movies.results,
+      });
+    } catch (e) {
+      console.log(e);
+    }
+  }
+
+  render() {
+    const { movies } = this.state;
+
+    if (movies < 1) return <h1 data-testid="loading">Loading...</h1>;
+    return (
+      <MovieGrid>
+        {movies.map(movie => (
+          <Movie key={movie.id} movie={movie} />
+        ))}
+      </MovieGrid>
+    );
+  }
+}
+
+export default MoviesList;
+```
+
+First thing we are doing is checking the loading state. If the loading state is there, then our test will pass. Next we'll wait if the ```'movie-link'``` shows up with our fake data. Once our ```'movie-link'``` is showed up, then we don't expect the testing to be there, and if the testing is going to show up anyway, that means the data is not coming in correctly and our test should fail.
+Next, that our loading is gone, we want to test that the ```'movie-link'``` has the correct path, this is going to verify our deeply nested component is rendering correctly and that the data is correct.
+After that, we're going to test the ```'movie-link'``` is going to be the same amount as we've put in.
+
+> MoviesList.test.js
+```javascript
+import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
+import { render, cleanup, waitForElement } from 'react-testing-library';
+import MoviesList from './MoviesList';
+
+global.fetch = require('jest-fetch-mock');
+
+afterEach(() => {
+  cleanup();
+  console.error.mockClear();
+});
+
+console.error = jest.fn();
+
+const movies = {
+  results: [
+    {
+      id: 'hi',
+      title: 'Casa de Papel',
+      poster_path: 'dsaagfaa.jpg',
+    },
+    {
+      id: 'dsfdagds',
+      title: 'Scary movie',
+      poster_path: 'vbt4.jpg',
+    },
+    {
+      id: 'g54',
+      title: 'Terminator',
+      poster_path: 'ds.jpg',
+    },
+    {
+      id: 'gtrhj6',
+      title: 'Lost in space',
+      poster_path: 'ten4t.jpg',
+    },
+  ],
+};
+
+const movie = movies.results[0];
+
+test('<MoviesList />', async () => {
+  // mocking the response
+  fetch.mockResponseOnce(JSON.stringify(movies));
+
+  const {
+    getByTestId,
+    queryByTestId,
+    getAllByTestId,
+    debug,
+  } = render(
+    <MemoryRouter>
+      <MoviesList />
+    </MemoryRouter>,
+  );
+  expect(getByTestId('loading')).toBeTruthy(); // getByTestId assumes that element is there
+  await waitForElement(() => getByTestId('movie-link'));
+  expect(queryByTestId('loading')).toBeFalsy(); // queryByTestId looks for the element
+  expect(getByTestId('movie-link').getAttribute('href')).toBe(`/${movie.id}`);
+  expect(getAllByTestId('movie-link').length).toBe(movies.results.length);
+  debug();
+});
+```
+
+
+
   ## Refactoring with tests
 
   ## Code coverage
