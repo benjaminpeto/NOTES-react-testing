@@ -1010,4 +1010,14 @@ Organizing components and tests into their individual folders, refactoring ```<M
 
   ## Code coverage
 
+Code coverage is a tool, what you can use to check the insights how much of your code get tested. To be able to get the correct percentage, make sure to remove ```registerServiceWorker.js```as it's a huge file, and it can enormously effect on your coverage report.
+
+> To run code coverage:
+  - Yarn
+```yarn test --coverage```
+  - Npm
+```npm test -- --coverage```
+
+
+
   ## Where to go from here
