@@ -846,6 +846,50 @@ test('<MovieDetail />', () => {
 
   ## Mocking fetch async tests and working with data
 
+We have to make sure that our mocked data has the same shape as our data from the real API, in order to our tests can pass.
+We expect our ```getByTestId``` to be the ```'movie-title'``` using some data.
+
+> MovieDetail.test.js
+```javascript
+import React from 'react';
+import { render, cleanup, waitForElement } from 'react-testing-library';
+import MovieDetail from './MovieDetail';
+
+global.fetch = require('jest-fetch-mock');
+
+afterEach(() => {
+  cleanup();
+  console.error.mockClear();
+});
+
+const match = {
+  params: {
+    id: 'dsajkñf43j',
+  },
+};
+
+console.error = jest.fn();
+
+const movie = {
+  id: 'hi',
+  title: 'Casa de Papel',
+};
+
+test('<MovieDetail />', async () => {
+  // mocking the response
+  fetch.mockResponseOnce(
+    JSON.stringify(movie),
+  );
+
+  const { getByTestId } = render(<MovieDetail match={match} />);
+  await waitForElement(() => getByTestId('movie-title'));
+
+  expect(getByTestId('movie-title').textContent).toBe(movie.title);
+});
+```
+
+
+
   ## Testing loading states and more pitfalls
 
   ## Refactoring with tests
