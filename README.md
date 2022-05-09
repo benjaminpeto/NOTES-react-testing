@@ -571,9 +571,9 @@ test('<MovieForm />', () => {
 
   ## Testing for errors and global mocks
 
-Rendering the ```javascript <Movie /> ``` component without props, we can test for errors. If we want to spy on errors, we can also mock them.
+Rendering the ``` <Movie /> ``` component without props, we can test for errors. If we want to spy on errors, we can also mock them.
 
-Mocking the ```javascript console.error ``` and seeing if it does get fired, it's definitely a technique to use for actually count on that thing.
+Mocking the ``` console.error ``` and seeing if it does get fired, it's definitely a technique to use for actually count on that thing.
 
 > Movie.js
 ```javascript
@@ -627,7 +627,7 @@ test('<Movie />', () => {
 
   ## Negative assertions and testing with react router
 
-First we will mock our ```javascript console.error```, then we make sure we call it. Then we define some fake data and pass that data into a component where we have a fake router wrapping around it.
+First we will mock our ``` console.error```, then we make sure we call it. Then we define some fake data and pass that data into a component where we have a fake router wrapping around it.
 
 > Movie.test.js
 ```javascript
@@ -669,6 +669,86 @@ test('<Movie /> with movie', () => {
 
 
   ## What to test
+
+We are testing if the link and the image is where it supposed to be, and what is supposed to be on our ``` <Movie /> ``` component.
+
+> Movie.js
+```javascript
+import React from 'react';
+import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
+import styled from 'styled-components';
+import Overdrive from 'react-overdrive';
+
+export const POSTER_PATH = 'http://image.tmdb.org/t/p/w154';
+
+const Movie = ({ movie }) => {
+  if (!movie) return null;
+  return (
+    <Link to={`/${movie.id}`} data-testid="movie-link">
+      <Overdrive id={`${movie.id}`}>
+        <Poster
+          data-testid="movie-img"
+          src={`${POSTER_PATH}${movie.poster_path}`}
+          alt={movie.title}
+        />
+      </Overdrive>
+    </Link>
+  );
+};
+
+export default Movie;
+
+Movie.propTypes = {
+  movie: PropTypes.shape({
+    title: PropTypes.string.isRequired,
+    poster_path: PropTypes.string.isRequired,
+    id: PropTypes.string.isRequired,
+  }).isRequired,
+};
+```
+
+> Movie.test.js
+```javascript
+import React from 'react';
+import { render, cleanup } from 'react-testing-library';
+import { MemoryRouter } from 'react-router-dom';
+import Movie, { POSTER_PATH } from './Movie';
+
+afterEach(() => {
+  cleanup();
+  console.error.mockClear(); // clean up the error
+});
+
+console.error = jest.fn();
+
+test('<Movie />', () => {
+  render(<Movie />);
+  expect(console.error).toHaveBeenCalled();
+});
+
+// mocking data, instead of calling the API
+const movie = {
+  id: 'hi',
+  title: 'Terminator',
+  poster_path: 'arnold.jpg',
+};
+
+// testing react router with <MemoryRouter />
+test('<Movie /> with movie', () => {
+  const { getByTestId } = render(
+    <MemoryRouter>
+      <Movie movie={movie} />
+    </MemoryRouter>,
+  );
+  expect(console.error).not.toHaveBeenCalled();
+  // getting relative href, not the absolute path of http
+  expect(getByTestId('movie-link').getAttribute('href')).toBe(`/${movie.id}`);
+  expect(getByTestId('movie-img').src).toBe(`${POSTER_PATH}${movie.poster_path}`);
+});
+```
+
+
 
   ## Mocking fetch
 
