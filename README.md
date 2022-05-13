@@ -1023,6 +1023,7 @@ Code coverage is a tool, what you can use to check the insights how much of your
   ## Where to go from here
 
  - Official [Jest Documentation](https://jestjs.io/docs/getting-started)
+ - Jest [Cheat Sheet](https://github.com/sapegin/jest-cheat-sheet)
  - Great articles about testing in react:
     - [Medium - Kent C. Dodds' Blog](https://medium.com/@kentcdodds)
     - [Official website - Kent C. Dodds' Blog](https://kentcdodds.com/blog)
